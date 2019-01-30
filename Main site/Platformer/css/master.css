@@ -1,0 +1,30 @@
+body {
+  background-color: SlateGray;
+}
+div {
+  float: left;
+  display: table;
+  padding: 10px;
+}
+h1 {
+  color: DarkSlateGray;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bolder;
+  font-size: 72px;
+}
+li {
+  color: DarkSlateGray;
+  font-family: 'Thasadith', sans-serif;
+  font-size: 24px;
+  font-weight: 1000px;
+}
+#back {
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  bottom: 5px;
+  background-color: White;
+  outline-color: Black;
+  outline-width: thick;
+  font-size: 24px;
+}
