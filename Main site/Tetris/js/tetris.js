@@ -3,8 +3,8 @@ const FPS = 60;
 
 // Canvas vars
 /** @type {HTMLCanvasElement}*/
-var canv = document.getElementById("tcanvas");
-var ctx = canv.getContext("2d");
+var canv = document.getElementById('tcanvas');
+var ctx = canv.getContext('2d');
 
 var cw = canv.width;
 var ch = canv.height;
@@ -18,13 +18,13 @@ var bpw = bw / 10;
 var bph = bh / 20;
 
 var ptypes = [
-  "O",
-  "I",
-  "T",
-  "S",
-  "Z",
-  "J",
-  "L"
+  'O',
+  'I',
+  'T',
+  'S',
+  'Z',
+  'J',
+  'L',
 ];
 var pieces = [newPiece(5, 0, ptypes[Math.floor(Math.random() * ptypes.length)])];
 pieces[0].setup();
@@ -50,88 +50,98 @@ for (var i = 0; i < 20; i++) {
       x: (j * bpw) + (cw / 3),
       y: i * bph,
       filled: false,
-      color: "Black"
+      color: 'Black',
     };
   }
 }
+
 // console.log(board);
 
 // Keyboard event handling
-document.addEventListener("keydown", keyDown);
-document.addEventListener("keyup", keyUp);
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
 
 // Run update() at FPS
 setInterval(update, 1000 / FPS);
 
 // Functions
-function keyDown( /** @type {KeyboardEvent} */ ev) {
+function keyDown(/** @type {KeyboardEvent} */ ev) {
   switch (ev.code) {
     // Game
-    case "Space":
+    case 'Space':
       if (!playing) {
         playing = true;
       }
+
       break;
-    case "Escape":
+    case 'Escape':
       if (playing) {
         playing = false;
       }
+
       break;
-    case "ArrowLeft":
+    case 'ArrowLeft':
       if (!pieces[currentPiece].locked) {
         move = true;
       } else {
         move = false;
       }
+
       for (var i = 0; i < pieces[currentPiece].bps.length; i++) {
         if (pieces[currentPiece].bps[i].x === 0) {
           move = false;
         }
       }
+
       if (move && !lmoved) {
         for (var j = 0; j < pieces[currentPiece].bps.length; j++) {
           pieces[currentPiece].bps[j].x -= 1;
           lmoved = true;
         }
       }
+
       break;
-    case "ArrowRight":
+    case 'ArrowRight':
       if (!pieces[currentPiece].locked) {
         move = true;
       } else {
         move = false;
       }
+
       for (var q = 0; q < pieces[currentPiece].bps.length; q++) {
         if (pieces[currentPiece].bps[q].x === board[0].length - 1) {
           move = false;
         }
       }
+
       if (move && !rmoved) {
         for (var r = 0; r < pieces[currentPiece].bps.length; r++) {
           pieces[currentPiece].bps[r].x += 1;
           rmoved = true;
         }
       }
+
       break;
-    case "ArrowDown":
+    case 'ArrowDown':
       fdrop = true;
       break;
+
       // Debug
-    case "KeyG":
+    case 'KeyG':
       grid = !grid;
       break;
   }
 }
 
-function keyUp( /** @type {KeyboardEvent} */ ev) {
+function keyUp(/** @type {KeyboardEvent} */ ev) {
   switch (ev.code) {
-    case "ArrowLeft":
+    case 'ArrowLeft':
       lmoved = false;
       break;
-    case "ArrowRight":
+    case 'ArrowRight':
       rmoved = false;
       break;
-    case "ArrowDown":
+    case 'ArrowDown':
       fdrop = false;
       break;
   }
@@ -143,149 +153,151 @@ function newPiece(relx, rely, type) {
     y: rely,
     type: type,
     locked: false,
-    color: "White",
+    color: 'White',
     bps: [],
+
     // Set up piece
-    setup: function() {
+    setup: function () {
       switch (this.type) {
-        case "O":
-          this.color = "#ffee00";
+        case 'O':
+          this.color = '#ffee00';
           this.bps.push({
             x: this.x,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           break;
-        case "I":
-          this.color = "#00ffff";
+        case 'I':
+          this.color = '#00ffff';
           this.bps.push({
             x: this.x,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 2
+            y: this.y + 2,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 3
+            y: this.y + 3,
           });
           break;
-        case "T":
-          this.color = "#ab00ff";
+        case 'T':
+          this.color = '#ab00ff';
           this.bps.push({
             x: this.x,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x - 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           break;
-        case "S":
-          this.color = "#00ff00";
+        case 'S':
+          this.color = '#00ff00';
           this.bps.push({
             x: this.x,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x - 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           break;
-        case "Z":
-          this.color = "#ff1010";
+        case 'Z':
+          this.color = '#ff1010';
           this.bps.push({
             x: this.x,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x - 1,
-            y: this.y
+            y: this.y,
           });
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           break;
-        case "J":
-          this.color = "#2040ff";
+        case 'J':
+          this.color = '#2040ff';
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x - 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x - 1,
-            y: this.y
+            y: this.y,
           });
           break;
-        case "L":
-          this.color = "#ff7700";
+        case 'L':
+          this.color = '#ff7700';
           this.bps.push({
             x: this.x,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x - 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y + 1
+            y: this.y + 1,
           });
           this.bps.push({
             x: this.x + 1,
-            y: this.y
+            y: this.y,
           });
       }
     },
+
     // Draw piece
-    draw: function() {
+    draw: function () {
       ctx.fillStyle = this.color;
-      ctx.strokeStyle = "Black";
+      ctx.strokeStyle = 'Black';
       ctx.lineWidth = 2;
       for (var i = 0; i < this.bps.length; i++) {
         // Draw piece and outlines
@@ -301,6 +313,7 @@ function newPiece(relx, rely, type) {
           bpw,
           bph
         );
+
         // Check if piece is at bottom & lock
         if (this.bps[i].y === board.length - 1 && !this.locked) {
           this.locked = true;
@@ -310,7 +323,9 @@ function newPiece(relx, rely, type) {
               clearLine(r);
             }
           }
-          // console.log("Locking piece of type " + this.type + " at index " + (currentPiece - 1) + "...");
+
+          // console.log('Locking piece of type '
+          //+ this.type + ' at index ' + (currentPiece - 1) + '...');
         } else {
           for (var j = 0; j < pieces.length; j++) {
             for (var q = 0; q < pieces[j].bps.length; q++) {
@@ -326,15 +341,16 @@ function newPiece(relx, rely, type) {
                     }
                   }
                 }
+
                 if (this.bps[i].x === pieces[j].bps[q].x - 1) {
                   if (this.bps[i].y === pieces[j].bps[q].y) {
                     rmoved = true;
-                    console.log("rmoved being set to true");
+                    console.log('rmoved being set to true');
                   }
                 } else if (this.bps[i].x === pieces[j].bps[q].x + 1) {
                   if (this.bps[i].y === pieces[j].bps[q].y) {
                     lmoved = true;
-                    console.log("lmoved being set to true");
+                    console.log('lmoved being set to true');
                   }
                 }
               }
@@ -342,8 +358,9 @@ function newPiece(relx, rely, type) {
           }
         }
       }
+
       // console.log(this.type);
-    }
+    },
   };
 }
 
@@ -358,38 +375,41 @@ function evalLine(lineNum) {
         }
       }
     }
+
     lineClear[i] = add;
     add = false;
   }
+
   clear = true;
   for (var r = 0; r < lineClear.length; r++) {
     if (!lineClear[r]) {
       clear = false;
     }
   }
+
   return clear;
 }
 
 function clearLine(lineNum) {
-  // console.log("clearing line " + lineNum);
+  // console.log('clearing line ' + lineNum);
 
 }
 
 function update() {
   // Fill background
-  ctx.fillStyle = "Black";
+  ctx.fillStyle = 'Black';
   ctx.fillRect(0, 0, cw, ch);
 
   // Check if the game is in session
   if (!playing) {
     // Draw title text
-    ctx.fillStyle = "White";
-    ctx.font = "108px VT323";
-    ctx.textAlign = "center";
-    ctx.fillText("Tetris", cw / 2, ch / 2);
+    ctx.fillStyle = 'White';
+    ctx.font = '108px VT323';
+    ctx.textAlign = 'center';
+    ctx.fillText('Tetris', cw / 2, ch / 2);
   } else {
     // Draw board outline
-    ctx.strokeStyle = "White";
+    ctx.strokeStyle = 'White';
     ctx.lineWidth = 5;
     ctx.strokeRect((cw / 3) - 2.5, 0, bw + 2.5, bh);
 
@@ -400,6 +420,7 @@ function update() {
       // Draw piece
       pieces[i].draw();
     }
+
     // Move every piece down if it is time
     if (fcounter === 0) {
       if (currentPiece < pieces.length) {
@@ -410,9 +431,11 @@ function update() {
         }
       } else {
         pieces.push(newPiece(5, 0, ptypes[Math.floor(Math.random() * ptypes.length)]));
-        // console.log("Pushing new piece...")
-        // console.log("New piece is type " + pieces[currentPiece].type + " at index " + currentPiece + ".");
-        // console.log("Setting up piece...")
+
+        // console.log('Pushing new piece...')
+        // console.log('New piece is type '
+        //+ pieces[currentPiece].type + ' at index ' + currentPiece + '.');
+        // console.log('Setting up piece...')
         pieces[currentPiece].setup();
         rmoved = false;
         lmoved = false;
@@ -426,7 +449,7 @@ function update() {
           xpos = board[q][j].x;
           ypos = board[q][j].y;
 
-          ctx.strokeStyle = "White";
+          ctx.strokeStyle = 'White';
           ctx.lineWidth = 1;
           ctx.strokeRect(xpos, ypos, bpw, bph);
         }
