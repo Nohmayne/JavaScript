@@ -65,7 +65,7 @@ function click(/** @type {KeyboardEvent} */ ev) {
       if (ev.clientX >= clement.x && ev.clientX <= clement.x + playArea.bw) {
         if (ev.clientY >= clement.y && ev.clientY <= clement.y + playArea.bh) {
           clement.clicked = true;
-          clement.findSurrounding(grid, i, j, clement.clicked);
+          clement.findSurrounding(grid, i, j, true);
         }
       }
     }
@@ -142,21 +142,16 @@ function newGridObj(x, y, id, surrounding) {
       bReturn = 0;
       for (var i = -1; i < 2; i++) {
         for (var j = -1; j < 2; j++) {
-          try {
-            if (array[index1 - i][index2 - j].id === 'bomb') {
-              bReturn++;
-              if (search) {
-                if (array[index1 - i][index2 - j].findSurrounding(
-                  array, index1, index2, false) === 0) {
-                  array[index1 - i][index2 - j].clicked = true;
-                  array[index1 - i][index2 - j].findSurrounding(array, index1, index2, true);
-                }
-              }
+          if (array[index1 - i][index2 - j].id === 'bomb') {
+            bReturn++;
+          }
+
+          if (search) {
+            if (array[index1 - i][index2 - j].surrounding === 0) {
+              console.log('0tile found');
             }
           }
-          catch (error) {
-            console.error(error);
-          }
+
         }
       }
 
@@ -165,6 +160,10 @@ function newGridObj(x, y, id, surrounding) {
       return bReturn;
     },
   };
+}
+
+function chainClear() {
+
 }
 
 function update() {
