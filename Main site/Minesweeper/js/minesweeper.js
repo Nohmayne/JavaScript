@@ -37,6 +37,7 @@ while (bombsLeft > 0) {
           'bomb',
           0
         );
+        console.log('Bomb placed');
         bombsLeft--;
       } else {
         grid[i][j] = newGridObj(
@@ -47,6 +48,12 @@ while (bombsLeft > 0) {
         );
       }
     }
+  }
+}
+
+for (var p = 0; p < grid.length; p++) {
+  for (var q = 0; q < grid[p].length; q++) {
+    grid[p][q].findSurrounding(grid, p, q);
   }
 }
 
@@ -65,7 +72,9 @@ function click(/** @type {KeyboardEvent} */ ev) {
       if (ev.clientX >= clement.x && ev.clientX <= clement.x + playArea.bw) {
         if (ev.clientY >= clement.y && ev.clientY <= clement.y + playArea.bh) {
           clement.clicked = true;
-          clement.findSurrounding(grid, i, j, true);
+          if (clement.surrounding === 0) {
+            clement.clearEmpty(grid, i, j);
+          }
         }
       }
     }
@@ -138,32 +147,54 @@ function newGridObj(x, y, id, surrounding) {
       }
     },
 
-    findSurrounding: function (array, index1, index2, search) {
+    findSurrounding: function (array, index1, index2) {
       bReturn = 0;
       for (var i = -1; i < 2; i++) {
         for (var j = -1; j < 2; j++) {
           if (array[index1 - i][index2 - j].id === 'bomb') {
             bReturn++;
           }
-
-          if (search) {
-            if (array[index1 - i][index2 - j].surrounding === 0) {
-              console.log('0tile found');
-            }
-          }
-
         }
       }
 
       this.surrounding = bReturn;
-      console.log(bReturn);
       return bReturn;
     },
+
+    clearEmpty: function (array, index1, index2) {
+      if (index1 === 0) {
+        if (index2 === 0) {
+          for (var i = 0; i < 2; i++) {
+            for (var j = 0; j < 2; j++) {
+              if (array[index1 + i][index2 + j].surrounding === 0) {
+                array[index1 + i][index2 + j].clicked = true;
+
+              }
+            }
+          }
+        }
+      }
+
+      // for (var i = -1; i < 2; i++) {
+      //   for (var j = -1; j < 2; j++) {
+      //     if (array[index1 - i][index2 - j].surrounding === 0) {
+      //       array[index1 - i][index2 - j].clicked = true;
+      //       array[index1 - i][index2 - j].clearEmpty(array, index1 - i, index2 - j);
+      //     }
+      //   }
+      // }
+    },
+
+    clearSurrounding: function (array, index1, index2) {
+      for (var i = -1; i < 2; i++) {
+        for (var j = -1; j < 2; j++) {
+          if (i !== 0 || j !== 0) {
+            array[index1 - i][index2 - j].clicked = true;
+          }
+        }
+      }
+    },
   };
-}
-
-function chainClear() {
-
 }
 
 function update() {
