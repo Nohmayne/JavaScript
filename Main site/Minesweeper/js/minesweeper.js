@@ -37,7 +37,6 @@ while (bombsLeft > 0) {
           'bomb',
           0
         );
-        console.log('Bomb placed');
         bombsLeft--;
       } else {
         grid[i][j] = newGridObj(
@@ -73,7 +72,7 @@ function click(/** @type {KeyboardEvent} */ ev) {
         if (ev.clientY >= clement.y && ev.clientY <= clement.y + playArea.bh) {
           clement.clicked = true;
           if (clement.surrounding === 0) {
-            clement.clearEmpty(grid, i, j);
+            clement.clearSurrounding(grid, i, j);
           }
         }
       }
@@ -133,6 +132,9 @@ function newGridObj(x, y, id, surrounding) {
           case 8:
             ctx.fillStyle = 'Black';
             break;
+          case 9:
+            ctx.fillStyle = '#08FA3B';
+            break;
           default:
             ctx.fillStyle = 'White';
             break;
@@ -150,9 +152,13 @@ function newGridObj(x, y, id, surrounding) {
     findSurrounding: function (array, index1, index2) {
       bReturn = 0;
       for (var i = -1; i < 2; i++) {
-        for (var j = -1; j < 2; j++) {
-          if (array[index1 - i][index2 - j].id === 'bomb') {
-            bReturn++;
+        for (var j = -1; j < 2; j++) { //TODO: Fix negative indexing
+          if (index1 - i >= 0 && index2 - j >= 0) {
+            if (index1 - i < array.length && index2 - j < array[index1 - i].length) {
+              if (array[index1 - i][index2 - j].id === 'bomb') {
+                bReturn++;
+              }
+            }
           }
         }
       }
@@ -161,35 +167,20 @@ function newGridObj(x, y, id, surrounding) {
       return bReturn;
     },
 
-    clearEmpty: function (array, index1, index2) {
-      if (index1 === 0) {
-        if (index2 === 0) {
-          for (var i = 0; i < 2; i++) {
-            for (var j = 0; j < 2; j++) {
-              if (array[index1 + i][index2 + j].surrounding === 0) {
-                array[index1 + i][index2 + j].clicked = true;
-
-              }
-            }
-          }
-        }
-      }
-
-      // for (var i = -1; i < 2; i++) {
-      //   for (var j = -1; j < 2; j++) {
-      //     if (array[index1 - i][index2 - j].surrounding === 0) {
-      //       array[index1 - i][index2 - j].clicked = true;
-      //       array[index1 - i][index2 - j].clearEmpty(array, index1 - i, index2 - j);
-      //     }
-      //   }
-      // }
-    },
-
     clearSurrounding: function (array, index1, index2) {
       for (var i = -1; i < 2; i++) {
         for (var j = -1; j < 2; j++) {
-          if (i !== 0 || j !== 0) {
-            array[index1 - i][index2 - j].clicked = true;
+          if (index1 - i >= 0 && index2 - j >= 0) {
+            if (index1 - i < array.length && index2 - j < array[index1 - i].length) {
+              if (array[index1 - i][index2 - j].surrounding === 0 &&
+                array[index1 - i][index2 - j].clicked === false) {
+                console.log('Clearing at ' + (index1 - i) + ', ' + (index2 - j));
+                array[index1 - i][index2 - j].clicked = true;
+                this.clearSurrounding(array, index1 - i, index2 - j);
+              }
+
+              array[index1 - i][index2 - j].clicked = true;
+            }
           }
         }
       }
