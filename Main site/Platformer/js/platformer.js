@@ -5,7 +5,7 @@ const JUMP_SPEED = 14; //jump speed measured relatively
 
 /** @type {HTMLCanvasElement} */
 var canv = document.getElementById('gameCanvas');
-var ctx = canv.getContext("2d");
+var ctx = canv.getContext('2d');
 
 //set up player
 var player = {
@@ -15,8 +15,8 @@ var player = {
   jumping: false,
   motion: {
     x: 0,
-    y: 0
-  }
+    y: 0,
+  },
 };
 
 //initiate level variables
@@ -26,57 +26,59 @@ var obstacles = [];
 var keyed = false;
 
 //set up event handlers
-document.addEventListener("keydown", keyDown);
-document.addEventListener("keyup", keyUp);
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
 
 // set up game loop
 setInterval(update, 1000 / FPS);
 
 function keyDown(/** @type {KeyboardEvent} */ ev) {
   switch (ev.code) {
-    case "KeyA": //start move left
+    case 'KeyA': //start move left
       player.moving = true;
       player.motion.x = (canv.width * (-MOVEMENT_SPEED)) / FPS;
       break;
-    case "KeyD": //start move right
+    case 'KeyD': //start move right
       player.moving = true;
       player.motion.x = (canv.width * (MOVEMENT_SPEED)) / FPS;
       break;
-    case "KeyW": //init jump
+    case 'KeyW': //init jump
       player.jumping = true;
-      if (!document.getElementById("jump")) {
-        var lst = document.createElement("LI")
-        var jText = document.createTextNode("W / SPACE = JUMP");
+      if (!document.getElementById('jump')) {
+        var lst = document.createElement('LI');
+        var jText = document.createTextNode('W / SPACE = JUMP');
         lst.appendChild(jText);
-        lst.setAttribute("id", "jump")
-        document.getElementById("controls").appendChild(lst)
+        lst.setAttribute('id', 'jump');
+        document.getElementById('controls').appendChild(lst);
       }
+
       break;
-    case "Space":
+    case 'Space':
       player.jumping = true;
-      if (!document.getElementById("jump")) {
-        var lst = document.createElement("LI")
-        var jText = document.createTextNode("W / SPACE = JUMP");
+      if (!document.getElementById('jump')) {
+        var lst = document.createElement('LI');
+        var jText = document.createTextNode('W / SPACE = JUMP');
         lst.appendChild(jText);
-        lst.setAttribute("id", "jump")
-        document.getElementById("controls").appendChild(lst)
+        lst.setAttribute('id', 'jump');
+        document.getElementById('controls').appendChild(lst);
       }
+
       break;
   }
 }
 
 function keyUp(/** @type {KeyboardEvent} */ ev) {
   switch (ev.code) {
-    case "KeyA": //start move left
+    case 'KeyA': //start move left
       player.moving = false;
       break;
-    case "KeyD": //start move right
+    case 'KeyD': //start move right
       player.moving = false;
       break;
-    case "KeyW": //stop jump
+    case 'KeyW': //stop jump
       player.jumping = false;
       break;
-    case "Space":
+    case 'Space':
       player.jumping = false;
       break;
   }
@@ -87,14 +89,14 @@ function newObstacle(x, y, size, key) {
     x: x,
     y: y,
     w: size,
-    key: key
+    key: key,
   };
   return obstacle;
 }
 
 function update() {
   //draw background
-  ctx.fillStyle = "black";
+  ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canv.width, canv.height);
 
   //update player pos
@@ -104,12 +106,13 @@ function update() {
   //glide to a stop
   if (!player.moving) {
     if (player.motion.x > 0) {
-      player.motion.x -= MOVEMENT_SPEED*4;
+      player.motion.x -= MOVEMENT_SPEED * 4;
     } else if (player.motion.x < 0) {
-      player.motion.x += MOVEMENT_SPEED*4;
+      player.motion.x += MOVEMENT_SPEED * 4;
     }
-    if (-MOVEMENT_SPEED*4 < player.motion.x && player.motion.x < MOVEMENT_SPEED*4) {
-      player.motion.x = 0
+
+    if (-MOVEMENT_SPEED * 4 < player.motion.x && player.motion.x < MOVEMENT_SPEED * 4) {
+      player.motion.x = 0;
     }
   }
 
@@ -134,6 +137,7 @@ function update() {
     if (keyed === true) {
       levelNum += 1;
     }
+
     keyed = false;
     player.x = 0;
   } else if (player.x <= 0) {
@@ -149,6 +153,7 @@ function update() {
       keyed = true;
       break;
     case 1:
+
       //create obstacles
       obstacles = [];
       obstacles.push(newObstacle(canv.width / 2, canv.height - 75, 75, true));
@@ -157,15 +162,16 @@ function update() {
       for (var i = 0; i < obstacles.length; i++) {
         //draw obstacles
         if (keyed) {
-          ctx.fillStyle = "gold";
+          ctx.fillStyle = 'gold';
         } else {
-          ctx.fillStyle = "white";
+          ctx.fillStyle = 'white';
         }
+
         ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].w, obstacles[i].w);
 
         //handle player collision
         if ((player.x + (canv.height * PLAYER_SIZE) / 2) > obstacles[i].x && player.x < (obstacles[i].x + obstacles[i].w)) {
-          if (player.y + (canv.height * PLAYER_SIZE)  <= obstacles[i].y) {
+          if (player.y + (canv.height * PLAYER_SIZE) <= obstacles[i].y) {
             groundLevel = obstacles[i].y;
           } else {
             groundLevel = canv.height;
@@ -181,8 +187,10 @@ function update() {
       } else if (keyed !== true) {
         keyed = false;
       }
+
       break;
     case 2:
+
       //create obstacles
       obstacles = [];
       obstacles.push(newObstacle(canv.width / 2 - 100, canv.height - 200, 75, true));
@@ -193,7 +201,7 @@ function update() {
 
         //handle player collision
         if ((player.x + (canv.height * PLAYER_SIZE) / 2) > obstacles[i].x && player.x < (obstacles[i].x + obstacles[i].w)) {
-          if (player.y + (canv.height * PLAYER_SIZE)  <= obstacles[i].y) {
+          if (player.y + (canv.height * PLAYER_SIZE) <= obstacles[i].y) {
             if (groundLevel > obstacles[i].y) {
               groundLevel = obstacles[i].y;
             }
@@ -211,38 +219,39 @@ function update() {
         //test for keyed
         if (obstacles[i].key) {
           if (groundLevel === obstacles[i].y && !keyed) {
-            ctx.fillStyle = "gold";
+            ctx.fillStyle = 'gold';
             keyed = true;
           } else if (!keyed && groundLevel !== obstacles[i].y) {
-            ctx.fillStyle = "white";
+            ctx.fillStyle = 'white';
             keyed = false;
           } else if (keyed) {
-            ctx.fillStyle = "gold";
+            ctx.fillStyle = 'gold';
           }
         } else if (!keyed) {
           keyed = false;
-          ctx.fillStyle = "white";
+          ctx.fillStyle = 'white';
         } else {
-          ctx.fillStyle = "white";
+          ctx.fillStyle = 'white';
         }
 
         //draw
         ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].w, obstacles[i].w);
 
       }
+
       break;
   }
 
   //draw level number
-  ctx.fillStyle = "white";
-  ctx.font = "24px Thasadith";
+  ctx.fillStyle = 'white';
+  ctx.font = '24px Thasadith';
   ctx.fillText(String(levelNum + 1), 20, 34, 100);
 
   //draw player
-  ctx.fillStyle = "maroon";
+  ctx.fillStyle = 'maroon';
   ctx.fillRect(player.x, player.y, (canv.height * PLAYER_SIZE) / 2, (canv.height * PLAYER_SIZE));
 
   // DEBUG:
-  console.log(groundLevel)
+  console.log(groundLevel);
 
 }

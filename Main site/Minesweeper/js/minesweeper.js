@@ -7,6 +7,8 @@ var cw = canv.width;
 var ch = canv.height;
 
 document.addEventListener('click', click);
+document.addEventListener('keydown', keyDown);
+document.addEventListener('mousemove', mouseMove)
 
 var bannerHeight = 20;
 var buffer = 5;
@@ -25,6 +27,11 @@ playArea.bh = playArea.height / playArea.gh;
 var bombNum = 100;
 var bPosp = [];
 var grid = [];
+
+var mousePos = {
+  x: 0,
+  y: 0,
+};
 
 for (var i = 0; i < playArea.gh; i++) {
   grid[i] = [];
@@ -68,8 +75,6 @@ for (var b = 0; b < bombNum; b++) {
   }
 }
 
-console.log(grid);
-
 for (var p = 0; p < grid.length; p++) {
   for (var q = 0; q < grid[p].length; q++) {
     grid[p][q].findSurrounding(grid, p, q);
@@ -82,21 +87,48 @@ function getRandomInt(min, max) {
   return min + (Math.floor(Math.random() * Math.floor(max)));
 }
 
-function click(/** @type {KeyboardEvent} */ ev) {
+function mouseMove(ev) {
+  mousePos.x = ev.clientX;
+  mousePos.y = ev.clientY;
+}
+
+function click(ev) {
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid[i].length; j++) {
-      cx = ev.pageX - buffer * 2;
-      cy = ev.pageY - buffer * 2;
       clement = grid[i][j];
-      if (ev.clientX >= clement.x && ev.clientX <= clement.x + playArea.bw) {
-        if (ev.clientY >= clement.y && ev.clientY <= clement.y + playArea.bh) {
-          clement.clicked = true;
-          if (clement.surrounding === 0) {
-            clement.clearSurrounding(grid, i, j);
+      if (mousePos.x >= clement.x && mousePos.x <= clement.x + playArea.bw) {
+        if (mousePos.y >= clement.y && mousePos.y <= clement.y + playArea.bh) {
+          if (!clement.flagged) {
+            clement.clicked = true;
+            if (clement.surrounding === 0) {
+              clement.clearSurrounding(grid, i, j);
+            }
           }
         }
       }
     }
+  }
+}
+
+function keyDown(ev) {
+  switch (ev.code) {
+    case 'KeyF':
+      for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[i].length; j++) {
+          clement = grid[i][j];
+          if (mousePos.x >= clement.x && mousePos.x <= clement.x + playArea.bw) {
+            if (mousePos.y >= clement.y && mousePos.y <= clement.y + playArea.bh) {
+              if (!clement.clicked) {
+                clement.flagged = !clement.flagged;
+              }
+            }
+          }
+        }
+      }
+
+      break;
+    default:
+      break;
   }
 }
 
