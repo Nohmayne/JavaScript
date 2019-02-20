@@ -8,7 +8,7 @@ var ch = canv.height;
 
 document.addEventListener('click', click);
 document.addEventListener('keydown', keyDown);
-document.addEventListener('mousemove', mouseMove)
+document.addEventListener('mousemove', mouseMove);
 
 var bannerHeight = 20;
 var buffer = 5;
