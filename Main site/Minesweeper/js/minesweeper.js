@@ -111,24 +111,43 @@ function click(ev) {
 }
 
 function keyDown(ev) {
-  switch (ev.code) {
-    case 'KeyF':
-      for (var i = 0; i < grid.length; i++) {
-        for (var j = 0; j < grid[i].length; j++) {
-          clement = grid[i][j];
-          if (mousePos.x >= clement.x && mousePos.x <= clement.x + playArea.bw) {
-            if (mousePos.y >= clement.y && mousePos.y <= clement.y + playArea.bh) {
+  for (var i = 0; i < grid.length; i++) {
+    for (var j = 0; j < grid[i].length; j++) {
+      clement = grid[i][j];
+      if (mousePos.x >= clement.x && mousePos.x <= clement.x + playArea.bw) {
+        if (mousePos.y >= clement.y && mousePos.y <= clement.y + playArea.bh) {
+          switch (ev.code) {
+            case 'KeyF':
               if (!clement.clicked) {
                 clement.flagged = !clement.flagged;
               }
-            }
+
+              break;
+
+            // case 'Space':
+            //   cNum = 0;
+            //   for (var p = -1; p < 2; p++) {
+            //     for (var q = -1; p < 2; q++) {
+            //       if (i - p >= 0 && i - p < playArea.gh) {
+            //         if (j - q >= 0 && j - q < playArea.gw) {
+            //           if (grid[i - p][j - q].flagged) {
+            //             cNum++;
+            //           }
+            //         }
+            //       }
+            //     }
+            //   }
+            //   if (cNum === clement.surrounding) {
+            //     console.log('Clearing at ' + i + ', ' + j);
+            //     clement.clearSurrounding(grid, i, j);
+            //   }
+            //   break;
+            default:
+              break;
           }
         }
       }
-
-      break;
-    default:
-      break;
+    }
   }
 }
 
@@ -195,14 +214,14 @@ function newGridObj(x, y, id, surrounding) {
             ctx.fillStyle = '#08FA3B';
             break;
           default:
-            ctx.fillStyle = 'White';
+            ctx.fillStyle = 'Black';
             break;
         }
         if (this.surrounding !== 0 && this.id !== 'bomb') {
           ctx.font = '' + playArea.bw + 'px Helvetica';
           ctx.fillText(this.surrounding, this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
         } else if (this.surrounding !== 0) {
-          ctx.fillStyle = 'White';
+          ctx.fillStyle = 'BLACK';
           ctx.font = '' + playArea.bw + 'px Helvetica';
           ctx.fillText('B', this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
         }
@@ -234,12 +253,17 @@ function newGridObj(x, y, id, surrounding) {
             if (index1 - i < array.length && index2 - j < array[index1 - i].length) {
               if (array[index1 - i][index2 - j].surrounding === 0 &&
                 array[index1 - i][index2 - j].clicked === false) {
-                console.log('Clearing at ' + (index1 - i) + ', ' + (index2 - j));
+                //if (!array[index1 - i][index2 - j].flagged) {
                 array[index1 - i][index2 - j].clicked = true;
                 this.clearSurrounding(array, index1 - i, index2 - j);
+
+                //}
               }
 
+              //if (!array[index1 - i][index2 - j].flagged) {
               array[index1 - i][index2 - j].clicked = true;
+
+              //}
             }
           }
         }

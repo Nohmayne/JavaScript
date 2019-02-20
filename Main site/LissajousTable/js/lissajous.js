@@ -5,8 +5,8 @@ const HALF_PI = Math.PI / 2;
 
 // Set canvas and context variables
 /** @type {HTMLCanvasElement} */
-var canv = document.getElementById("ljtbl");
-var ctx = canv.getContext("2d");
+var canv = document.getElementById('ljtbl');
+var ctx = canv.getContext('2d');
 
 // Set basic global constants
 //canv.width = screen.availWidth;
@@ -25,16 +25,16 @@ var trace = true;
 
 // Set lsj to a list of nulls
 for (var r = 0; (r + 1) < ch / diameter; r++) {
-  lsj.push([])
+  lsj.push([]);
   for (var q = 0; (q + 1) < cw / diameter; q++) {
-    lsj[r].push({points:[]})
+    lsj[r].push({points:[]});
   }
 }
 
 // Set misc. variables
 var grd = ctx.createLinearGradient(0, 0, cw, ch);
-grd.addColorStop(0, "DeepPink");
-grd.addColorStop(1, "DarkOrange");
+grd.addColorStop(0, 'DeepPink');
+grd.addColorStop(1, 'DarkOrange');
 
 // Run update at fps
 setInterval(update, 1000 / FPS);
@@ -42,7 +42,7 @@ setInterval(update, 1000 / FPS);
 // Update the screen
 function update() {
   // Fill the background with black
-  ctx.fillStyle = "black";
+  ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, cw, ch);
 
   // Set storage vars for re-use in stroking lissajous's
@@ -54,7 +54,7 @@ function update() {
   // Draw top circles, points, and lines
   for (var i = 0; (i + 1) < cw / diameter; i++) {
     // Stroke circles and add to tcircs
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = 'white';
     circx = (i + 1.5) * diameter + padding;
     circy = radius + padding;
     ctx.beginPath();
@@ -64,7 +64,7 @@ function update() {
     ctx.closePath();
 
     // Fill point based on circle pos and angle
-    ctx.fillStyle = "white";
+    ctx.fillStyle = 'white';
     px = circx + (radius - padding) * Math.cos(angle * (i + 1));
     py = circy + (radius - padding) * Math.sin(angle * (i + 1));
     ctx.beginPath();
@@ -73,7 +73,7 @@ function update() {
     ctx.closePath();
 
     // Stroke line based on point X
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = 'white';
     ctx.beginPath();
     ctx.moveTo(px, 0);
     ctx.lineTo(px, ch);
@@ -87,7 +87,7 @@ function update() {
   // Draw left circles, points, and lines
   for (var j = 0; (j + 1) < ch / diameter; j++) {
     // Stroke circles and add to lcircs
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = 'white';
     circx = radius + padding;
     circy = (j + 1.5) * diameter + padding;
     ctx.beginPath();
@@ -97,7 +97,7 @@ function update() {
     ctx.closePath();
 
     // Fill point based on circle pos and angle
-    ctx.fillStyle = "white";
+    ctx.fillStyle = 'white';
     px = circx + (radius - padding) * Math.cos(angle * (j + 1));
     py = circy + (radius - padding) * Math.sin(angle * (j + 1));
     ctx.beginPath();
@@ -106,7 +106,7 @@ function update() {
     ctx.closePath();
 
     // Stroke line based on point Y
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = 'white';
     ctx.beginPath();
     ctx.moveTo(0, py);
     ctx.lineTo(cw, py);
@@ -138,7 +138,7 @@ function update() {
       //*/ // COMMENTS IF STARTING TRACE = FALSE
 
       // Draw points
-      ctx.fillStyle = "white";
+      ctx.fillStyle = 'white';
       ctx.beginPath();
       ctx.arc(tcposs[h], lcposs[k], prad, 0, TWO_PI);
       ctx.fill();
