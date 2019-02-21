@@ -1,0 +1,20 @@
+body {
+  background-color: Gainsboro;
+}
+.slcont {
+  width: 100%;
+  align-items: center;
+}
+.slider {
+  width: 25%
+}
+#back {
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  bottom: 5px;
+  background-color: White;
+  outline-color: Black;
+  outline-width: thick;
+  font-size: 24px;
+}

@@ -1,18 +1,19 @@
 main();
 
 function main() {
-  const c = document.getElementById('paintCanvas');
-  const gl = c.getContext("webgl");
+  var c = document.getElementById('paintCanvas');
+  var gl = c.getContext('webgl');
   if (gl === null) {
-    console.warn("WebGL not supported, falling back to webgl-experimental");
-    gl = c.getContext("webgl-experimental")
+    console.warn('WebGL not supported, falling back to webgl-experimental');
+    gl = c.getContext('webgl-experimental');
   }
+
   if (gl === null) {
-    console.error("WebGL is not supported by this browser or machine.")
+    console.error('WebGL is not supported by this browser or machine.');
   }
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   const vsSource = `
       attribute vec4 aVertexPosition;
@@ -50,7 +51,7 @@ function main() {
         modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
         translation: gl.getUniformLocation(shaderProgram, 'uTranslation'),
       },
-  };
+    };
 
   const buffers = initBuffers(gl);
 
@@ -65,10 +66,12 @@ function main() {
 
     requestAnimationFrame(render);
   }
+
   requestAnimationFrame(render);
 
-  addEventListener("keydown", keyDown);
-  //addEventListener("keyup", keyUp);
+  addEventListener('keydown', keyDown);
+
+  //addEventListener('keyup', keyUp);
 }
 
 function loadShader(gl, type, source) {
@@ -98,7 +101,7 @@ function initShaderProgram(gl, vsSource, fsSource) {
   gl.linkProgram(shaderProgram);
 
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    alert('ERROR in program linkage: ' + gl.getProgramInfoLog(shaderProgram))
+    alert('ERROR in program linkage: ' + gl.getProgramInfoLog(shaderProgram));
     return null;
   }
 
@@ -111,6 +114,7 @@ function initBuffers(gl) {
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
   const positions = [
+
     //front face
     -1.0, -1.0, 1.0,
     1.0, -1.0, 1.0,
@@ -149,7 +153,7 @@ function initBuffers(gl) {
 
   ];
 
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
   const faceColors = [
     [1.0, 1.0, 1.0, 1.0],
@@ -169,7 +173,7 @@ function initBuffers(gl) {
 
   const colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 
   const indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -200,11 +204,13 @@ function keyDown(/**@type {KeyboardEvent}*/ ev) {
   if (ev.code === 'Space') {
     rotating = !rotating;
   }
+
   if (ev.code === 'KeyW') {
     moveZ += 0.05;
   }
+
   if (ev.code === 'KeyS') {
-    moveZ -= 0.05
+    moveZ -= 0.05;
   }
 }
 
@@ -297,8 +303,9 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
     const vertexCount = 36;
     const type = gl.UNSIGNED_SHORT;
     const offset = 0;
-    gl.drawElements(gl.TRIANGLES, vertexCount, type, offset)
+    gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
   }
+
   if (rotating) {
     cubeRotation += deltaTime;
   }
