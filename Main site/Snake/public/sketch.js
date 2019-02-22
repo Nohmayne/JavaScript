@@ -3,13 +3,17 @@ var height;
 
 var scl = 15;
 var s;
+var splu = new Array(0);
 var f;
 
 function setup() {
-  width = 800;
-  height = 600;
+  width = 1280;
+  height = 720;
 
-  s = new Snake(scl);
+  s1 = new Snake(scl);
+  s2 = new Snake(scl);
+  splu[0] = s1;
+  splu[1] = s2;
   f = new Food();
 
   createCanvas(width, height);
@@ -20,25 +24,39 @@ function setup() {
 function draw() {
   background(57);
   f.show();
-  s.update();
-  s.eat(f);
-  s.death();
-  s.show();
+  for (var i = 0; i < splu.length; i++) {
+    splu[i].update();
+    splu[i].eat(f);
+    splu[i].death();
+    splu[i].show();
+  }
 }
 
 function keyPressed() {
   switch (keyCode) {
     case UP_ARROW:
-      s.turn(createVector(0, -1));
+      if (s1.yspeed != 1) {
+        s1.turn(createVector(0, -1));
+      }
+
       break;
     case DOWN_ARROW:
-      s.turn(createVector(0, 1));
+      if (s1.yspeed != -1) {
+        s1.turn(createVector(0, 1));
+      }
+
       break;
     case LEFT_ARROW:
-      s.turn(createVector(-1, 0));
+      if (s1.xspeed != 1) {
+        s1.turn(createVector(-1, 0));
+      }
+
       break;
     case RIGHT_ARROW:
-      s.turn(createVector(1, 0));
+      if (s1.xspeed != -1) {
+        s1.turn(createVector(1, 0));
+      }
+
       break;
     default:
       break;
@@ -47,4 +65,5 @@ function keyPressed() {
 
 function mouseClicked() {
   f.newLocation();
+  s1.length++;
 }
