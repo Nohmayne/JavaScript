@@ -58,6 +58,12 @@ function keyPressed() {
       }
 
       break;
+    case KeyA:
+      if (s2.xspeed != 1) {
+        s2.turn(createVector(-1, 0));
+      }
+
+      break;
     default:
       break;
   }
