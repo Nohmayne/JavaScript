@@ -2,8 +2,8 @@ class Ball {
   constructor() {
     this.x = w / 2;
     this.y = h / 2;
-    this.w = 25;
-    this.vel = createVector(-5, -2);
+    this.w = 20;
+    this.vel = createVector(0, 5);
   }
 
   update() {
@@ -36,6 +36,7 @@ class Ball {
         this.vel.y = -this.vel.y;
         this.y -= this.w / 2;
         this.vel.x -= p.vel / 8;
+        p.change();
       }
     }
   }

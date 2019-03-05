@@ -11,7 +11,11 @@ function setup() {
   p = new Paddle();
   b = new Ball();
 
-  bricks.push(new Brick(w / 2, h / 2));
+  for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 20; j++) {
+      bricks.push(new Brick((w / 40) + (w / 20) * j, (h / 40) + (h / 20) * i));
+    }
+  }
 
   createCanvas(w, h);
 }
@@ -20,6 +24,7 @@ function draw() {
   background(0);
   if (!b.death()) {
     for (var i = 0; i < bricks.length; i++) {
+      bricks[i].break(b);
       bricks[i].show();
     }
 
@@ -34,6 +39,12 @@ function draw() {
     strokeWeight(5);
     stroke(255);
     rectMode(CENTER);
-    rect(w / 2, h / 2, 200, 100);
+    rect(w / 2, h / 2, 400, 200);
+
+    noStroke();
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(75);
+    text('Game Over', w / 2, h / 2);
   }
 }
