@@ -124,24 +124,25 @@ function keyDown(ev) {
 
               break;
 
-            // case 'Space':
-            //   cNum = 0;
-            //   for (var p = -1; p < 2; p++) {
-            //     for (var q = -1; p < 2; q++) {
-            //       if (i - p >= 0 && i - p < playArea.gh) {
-            //         if (j - q >= 0 && j - q < playArea.gw) {
-            //           if (grid[i - p][j - q].flagged) {
-            //             cNum++;
-            //           }
-            //         }
-            //       }
-            //     }
-            //   }
-            //   if (cNum === clement.surrounding) {
-            //     console.log('Clearing at ' + i + ', ' + j);
-            //     clement.clearSurrounding(grid, i, j);
-            //   }
-            //   break;
+            case 'Space':
+              cNum = 0;
+              for (var p = -1; p < 2; p++) {
+                for (var q = -1; p < 2; q++) {
+                  if (i - p >= 0 && i - p < playArea.gh) {
+                    if (j - q >= 0 && j - q < playArea.gw) {
+                      if (grid[i - p][j - q].flagged) {
+                        cNum++;
+                      }
+                    }
+                  }
+                }
+              }
+
+              if (cNum == clement.surrounding) {
+                clement.clearSurrounding(grid, i, j);
+              }
+
+              break;
             default:
               break;
           }
@@ -260,10 +261,10 @@ function newGridObj(x, y, id, surrounding) {
                 //}
               }
 
-              //if (!array[index1 - i][index2 - j].flagged) {
-              array[index1 - i][index2 - j].clicked = true;
+              if (!array[index1 - i][index2 - j].flagged) {
+                array[index1 - i][index2 - j].clicked = true;
 
-              //}
+              }
             }
           }
         }

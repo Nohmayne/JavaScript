@@ -58,9 +58,30 @@ function keyPressed() {
       }
 
       break;
-    case KeyA:
+  }
+
+  switch (key) {
+    case 'a':
       if (s2.xspeed != 1) {
         s2.turn(createVector(-1, 0));
+      }
+
+      break;
+    case 'w':
+      if (s2.yspeed != 1) {
+        s2.turn(createVector(0, -1));
+      }
+
+      break;
+    case 's':
+      if (s2.yspeed != -1) {
+        s2.turn(createVector(0, 1));
+      }
+
+      break;
+    case 'd':
+      if (s2.xspeed != -1) {
+        s2.turn(createVector(1, 0));
       }
 
       break;
