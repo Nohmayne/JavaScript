@@ -10,6 +10,7 @@ document.addEventListener('click', click);
 document.addEventListener('keydown', keyDown);
 document.addEventListener('mousemove', mouseMove);
 
+var speedSweeper = document.getElementById('ss');
 var bannerHeight = 50;
 var buffer = 5;
 var playArea = {
@@ -69,6 +70,7 @@ for (var b = 0; b < bombNum; b++) {
     );
     bPosp.push(nPos);
     placed = true;
+    bombsLeft++;
   }
 
   if (!placed) {
@@ -100,8 +102,94 @@ var reloadButton = {
 
     ctx.fillStyle = 'Black';
     ctx.textAlign = 'center';
-    ctx.font = '' + playArea.bw + 'px Helvetica';
+    ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
     ctx.fillText('R', this.x + this.w / 2, this.y + this.h - buffer / 2);
+  },
+};
+
+var bCounter = {
+  x: (playArea.width - (playArea.bw * 2)) + buffer,
+  y: buffer + bannerHeight / 2,
+  w: playArea.bw * 2,
+  h: playArea.bh,
+  draw: function (counter) {
+    ctx.strokeStyle = 'Black';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, this.w, this.h);
+
+    ctx.fillStyle = 'Gray';
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+
+    ctx.fillStyle = 'Black';
+    ctx.fillRect(this.x + 3, this.y + 3, this.w - 3 * 2, this.h - 3 * 2);
+
+    ctx.fillStyle = 'Red';
+    ctx.textAlign = 'center';
+    ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
+    ctx.fillText('' + counter, this.x + this.w / 2, this.y + this.h - buffer / 2);
+  },
+};
+
+var timer = {
+  x: buffer + playArea.bw,
+  y: buffer + bannerHeight / 2,
+  w: playArea.bw * 2,
+  h: playArea.bh,
+  start: Date.now(),
+  count: Math.floor((Date.now() - this.start) / 1000),
+  draw: function () {
+    ctx.strokeStyle = 'Black';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, this.w, this.h);
+
+    ctx.fillStyle = 'Gray';
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+
+    ctx.fillStyle = 'Black';
+    ctx.fillRect(this.x + 3, this.y + 3, this.w - 3 * 2, this.h - 3 * 2);
+
+    ctx.fillStyle = 'Red';
+    ctx.textAlign = 'center';
+    ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
+    ctx.fillText('' + this.count, this.x + this.w / 2, this.y + this.h - buffer / 2);
+  },
+
+  update: function () {
+    this.count = Math.floor((Date.now() - this.start) / 1000);
+  },
+};
+
+var shotClock = {
+  x: buffer + (playArea.bw * 3),
+  y: buffer + bannerHeight / 2,
+  w: playArea.bw * 2,
+  h: playArea.bh,
+  time: 20,
+  start: Date.now(),
+  count: Math.floor(-(this.start - Date.now()) / 1000),
+  draw: function () {
+    ctx.strokeStyle = 'Black';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, this.w, this.h);
+
+    ctx.fillStyle = 'Gray';
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+
+    ctx.fillStyle = 'Black';
+    ctx.fillRect(this.x + 3, this.y + 3, this.w - 3 * 2, this.h - 3 * 2);
+
+    ctx.fillStyle = 'Red';
+    ctx.textAlign = 'center';
+    ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
+    ctx.fillText('' + this.count, this.x + this.w / 2, this.y + this.h - buffer / 2);
+  },
+
+  update: function () {
+    this.count = Math.floor(20 + (this.start - Date.now()) / 1000);
+  },
+
+  reset: function () {
+    this.start = Date.now();
   },
 };
 
@@ -125,6 +213,7 @@ function click(ev) {
       clement = grid[i][j];
       if (mousePos.x >= clement.x && mousePos.x <= clement.x + playArea.bw) {
         if (mousePos.y >= clement.y && mousePos.y <= clement.y + playArea.bh) {
+          shotClock.reset();
           if (!clement.flagged) {
             clement.clicked = true;
             if (clement.surrounding === 0) {
@@ -168,11 +257,20 @@ function keyDown(ev) {
                 }
 
                 clement.findSurrounding(grid, i, j);
-                if (cnum == clement.surrounding) {
+                if (cnum == clement.surrounding && clement.surrounding !== 0) {
                   clement.clearSurrounding(grid, i, j);
+                  shotClock.reset();
                 }
               } else if (!clement.clicked) {
-                clement.flagged = !clement.flagged;
+                if (clement.flagged) {
+                  clement.flagged = false;
+                  shotClock.reset();
+                  bombsLeft++;
+                } else if (!clement.flagged) {
+                  clement.flagged = true;
+                  shotClock.reset();
+                  bombsLeft--;
+                }
               }
 
               break;
@@ -208,7 +306,7 @@ function newGridObj(x, y, id, surrounding) {
         if (this.flagged) {
           ctx.fillStyle = 'Red';
           ctx.textAlign = 'center';
-          ctx.font = '' + playArea.bw + 'px Helvetica';
+          ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
           ctx.fillText('F', this.x + playArea.bw / 2, this.y + playArea.bh - buffer / 2);
         }
       } else {
@@ -253,12 +351,12 @@ function newGridObj(x, y, id, surrounding) {
             break;
         }
         if (this.surrounding !== 0 && this.id !== 'bomb') {
-          ctx.font = '' + playArea.bw + 'px Helvetica';
+          ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
           ctx.textAlign = 'start';
           ctx.fillText(this.surrounding, this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
         } else if (this.surrounding !== 0) {
           ctx.fillStyle = 'BLACK';
-          ctx.font = '' + playArea.bw + 'px Helvetica';
+          ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
           ctx.textAlign = 'start';
           ctx.fillText('B', this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
         }
@@ -317,4 +415,15 @@ function update() {
   }
 
   reloadButton.draw();
+
+  bCounter.draw(bombsLeft);
+
+  timer.update();
+  timer.draw();
+
+  if (speedSweeper.checked) {
+    shotClock.update();
+  }
+
+  shotClock.draw();
 }
