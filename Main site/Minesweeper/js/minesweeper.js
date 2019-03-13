@@ -10,7 +10,7 @@ document.addEventListener('click', click);
 document.addEventListener('keydown', keyDown);
 document.addEventListener('mousemove', mouseMove);
 
-var bannerHeight = 20;
+var bannerHeight = 50;
 var buffer = 5;
 var playArea = {
   x: buffer,
@@ -27,6 +27,7 @@ playArea.bh = playArea.height / playArea.gh;
 var bombNum = 100;
 var bPosp = [];
 var grid = [];
+var bombsLeft = 0;
 
 var mousePos = {
   x: 0,
@@ -81,6 +82,29 @@ for (var p = 0; p < grid.length; p++) {
   }
 }
 
+var reloadButton = {
+  x: buffer,
+  y: buffer + bannerHeight / 2,
+  w: playArea.bw,
+  h: playArea.bh,
+  draw: function () {
+    ctx.strokeStyle = 'Black';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, playArea.bw, playArea.bh);
+
+    ctx.fillStyle = 'Gray';
+    ctx.fillRect(this.x, this.y, playArea.bw, playArea.bh);
+
+    ctx.fillStyle = 'Gainsboro';
+    ctx.fillRect(this.x + 3, this.y + 3, playArea.bw - 3 * 2, playArea.bh - 3 * 2);
+
+    ctx.fillStyle = 'Black';
+    ctx.textAlign = 'center';
+    ctx.font = '' + playArea.bw + 'px Helvetica';
+    ctx.fillText('R', this.x + this.w / 2, this.y + this.h - buffer / 2);
+  },
+};
+
 setInterval(update, 1000 / FPS);
 
 function getRandomInt(min, max) {
@@ -90,6 +114,9 @@ function getRandomInt(min, max) {
 function mouseMove(ev) {
   mousePos.x = ev.clientX;
   mousePos.y = ev.clientY;
+
+  mousePos.x -= 8;
+  mousePos.y -= 8;
 }
 
 function click(ev) {
@@ -108,6 +135,12 @@ function click(ev) {
       }
     }
   }
+
+  if (mousePos.x >= reloadButton.x && mousePos.x <= reloadButton.x + playArea.bw) {
+    if (mousePos.y >= reloadButton.y && mousePos.y <= reloadButton.y + playArea.bh) {
+      location.reload(true);
+    }
+  }
 }
 
 function keyDown(ev) {
@@ -117,29 +150,29 @@ function keyDown(ev) {
       if (mousePos.x >= clement.x && mousePos.x <= clement.x + playArea.bw) {
         if (mousePos.y >= clement.y && mousePos.y <= clement.y + playArea.bh) {
           switch (ev.code) {
-            case 'KeyF':
-              if (!clement.clicked) {
-                clement.flagged = !clement.flagged;
-              }
-
-              break;
-
             case 'Space':
-              cNum = 0;
-              for (var p = -1; p < 2; p++) {
-                for (var q = -1; p < 2; q++) {
-                  if (i - p >= 0 && i - p < playArea.gh) {
-                    if (j - q >= 0 && j - q < playArea.gw) {
-                      if (grid[i - p][j - q].flagged) {
-                        cNum++;
+              if (clement.clicked) {
+                var cnum = 0;
+                var suby = i - 1;
+                var subx = j - 1;
+                for (var p = 0; p < 3; p++) {
+                  for (var q = 0; q < 3; q++) {
+                    if (suby + p >= 0 && suby + p < playArea.gh) {
+                      if (subx + q >= 0 && subx + q < playArea.gw) {
+                        if (grid[suby + p][subx + q].flagged) {
+                          cnum++;
+                        }
                       }
                     }
                   }
                 }
-              }
 
-              if (cNum == clement.surrounding) {
-                clement.clearSurrounding(grid, i, j);
+                clement.findSurrounding(grid, i, j);
+                if (cnum == clement.surrounding) {
+                  clement.clearSurrounding(grid, i, j);
+                }
+              } else if (!clement.clicked) {
+                clement.flagged = !clement.flagged;
               }
 
               break;
@@ -174,8 +207,9 @@ function newGridObj(x, y, id, surrounding) {
 
         if (this.flagged) {
           ctx.fillStyle = 'Red';
+          ctx.textAlign = 'center';
           ctx.font = '' + playArea.bw + 'px Helvetica';
-          ctx.fillText('F', this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
+          ctx.fillText('F', this.x + playArea.bw / 2, this.y + playArea.bh - buffer / 2);
         }
       } else {
         ctx.strokeStyle = 'Black';
@@ -220,10 +254,12 @@ function newGridObj(x, y, id, surrounding) {
         }
         if (this.surrounding !== 0 && this.id !== 'bomb') {
           ctx.font = '' + playArea.bw + 'px Helvetica';
+          ctx.textAlign = 'start';
           ctx.fillText(this.surrounding, this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
         } else if (this.surrounding !== 0) {
           ctx.fillStyle = 'BLACK';
           ctx.font = '' + playArea.bw + 'px Helvetica';
+          ctx.textAlign = 'start';
           ctx.fillText('B', this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
         }
       }
@@ -254,11 +290,11 @@ function newGridObj(x, y, id, surrounding) {
             if (index1 - i < array.length && index2 - j < array[index1 - i].length) {
               if (array[index1 - i][index2 - j].surrounding === 0 &&
                 array[index1 - i][index2 - j].clicked === false) {
-                //if (!array[index1 - i][index2 - j].flagged) {
-                array[index1 - i][index2 - j].clicked = true;
-                this.clearSurrounding(array, index1 - i, index2 - j);
+                if (!array[index1 - i][index2 - j].flagged) {
+                  array[index1 - i][index2 - j].clicked = true;
+                  this.clearSurrounding(array, index1 - i, index2 - j);
 
-                //}
+                }
               }
 
               if (!array[index1 - i][index2 - j].flagged) {
@@ -274,13 +310,11 @@ function newGridObj(x, y, id, surrounding) {
 }
 
 function update() {
-  ctx.fillStyle = 'White';
-  ctx.fillRect(0, 0, cw, ch);
-
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid[i].length; j++) {
       grid[i][j].draw();
     }
   }
 
+  reloadButton.draw();
 }
