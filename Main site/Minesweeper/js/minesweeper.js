@@ -29,6 +29,7 @@ var bombNum = 100;
 var bPosp = [];
 var grid = [];
 var bombsLeft = 0;
+var playing = true;
 
 var mousePos = {
   x: 0,
@@ -164,7 +165,7 @@ var shotClock = {
   y: buffer + bannerHeight / 2,
   w: playArea.bw * 2,
   h: playArea.bh,
-  time: 20,
+  time: 10,
   start: Date.now(),
   count: Math.floor(-(this.start - Date.now()) / 1000),
   draw: function () {
@@ -185,7 +186,11 @@ var shotClock = {
   },
 
   update: function () {
-    this.count = Math.floor(20 + (this.start - Date.now()) / 1000);
+    this.count = Math.floor(this.time + (this.start - Date.now()) / 1000);
+
+    if (this.count <= 0) {
+      playing = false;
+    }
   },
 
   reset: function () {
@@ -359,6 +364,7 @@ function newGridObj(x, y, id, surrounding) {
           ctx.font = '' + playArea.bw - buffer + 'px Helvetica';
           ctx.textAlign = 'start';
           ctx.fillText('B', this.x + playArea.bw / 4, this.y + playArea.bh - buffer);
+          playing = false;
         }
       }
     },
@@ -408,22 +414,29 @@ function newGridObj(x, y, id, surrounding) {
 }
 
 function update() {
-  for (var i = 0; i < grid.length; i++) {
-    for (var j = 0; j < grid[i].length; j++) {
-      grid[i][j].draw();
+  if (playing) {
+    for (var i = 0; i < grid.length; i++) {
+      for (var j = 0; j < grid[i].length; j++) {
+        grid[i][j].draw();
+      }
     }
+
+    reloadButton.draw();
+
+    bCounter.draw(bombsLeft);
+
+    timer.update();
+    timer.draw();
+
+    if (speedSweeper.checked) {
+      shotClock.update();
+    }
+
+    shotClock.draw();
+  } else {
+    ctx.fillStyle = 'Black';
+    ctx.font = '' + playArea.height / 2 + 'px Times New Roman';
+    ctx.textAlign = 'center';
+    ctx.fillText('Game Over', cw / 2, ch / 2, playArea.width);
   }
-
-  reloadButton.draw();
-
-  bCounter.draw(bombsLeft);
-
-  timer.update();
-  timer.draw();
-
-  if (speedSweeper.checked) {
-    shotClock.update();
-  }
-
-  shotClock.draw();
 }

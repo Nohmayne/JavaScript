@@ -1,5 +1,5 @@
 // Set global constants
-const FPS = 10000000;
+const FPS = 1000000000;
 
 // Set up base canvas variables
 /** @type {HTMLCanvasElement} */
@@ -67,61 +67,61 @@ function update() {
   }
 
   // Do 5 times per frame
-  //for (var i = 0; i < 5; i++) {
-  if (type === 'Bubble') {
-    // Sort and Draw
-    ctx.strokeStyle = 'Black';
-    if (sorting && index < focus) {
-      if (values[index] > values[index + 1]) {
-        var temp = values[index];
-        values[index] = values[index + 1];
-        values[index + 1] = temp;
+  for (var i = 0; i < clnum * 5; i++) {
+    if (type === 'Bubble') {
+      // Sort and Draw
+      ctx.strokeStyle = 'Black';
+      if (sorting && index < focus) {
+        if (values[index] > values[index + 1]) {
+          var temp = values[index];
+          values[index] = values[index + 1];
+          values[index + 1] = temp;
 
-        ctx.fillStyle = 'Red';
-        ctx.fillRect(index * clw + 1, ch - values[index], clw, values[index]);
-        ctx.strokeRect(index * clw + 1, ch - values[index], clw, values[index]);
+          ctx.fillStyle = 'Red';
+          ctx.fillRect(index * clw + 1, ch - values[index], clw, values[index]);
+          ctx.strokeRect(index * clw + 1, ch - values[index], clw, values[index]);
 
+        }
+
+        index++;
+      } else if (sorting) {
+        index = 0;
+        focus--;
+        if (focus <= 0) {
+          sorting = false;
+        }
+      }
+    } else if (type === 'Selection') {
+      // Sort and Draw
+      ctx.strokeStyle = 'Black';
+      if (sorting && index < focus - 1) {
+        if (values[index] > values[highest]) {
+          highest = index;
+
+        }
+
+        index++;
+      } else if (sorting) {
+        var temp = values[highest];
+        values[highest] = values[focus - 1];
+        values[focus - 1] = temp;
+
+        index = 0;
+        focus--;
+        if (focus <= 0) {
+          sorting = false;
+        }
       }
 
-      index++;
-    } else if (sorting) {
-      index = 0;
-      focus--;
-      if (focus <= 0) {
-        sorting = false;
-      }
+      ctx.fillStyle = 'Red';
+      ctx.fillRect(index * clw + 1, ch - values[index], clw, values[index]);
+      ctx.strokeRect(index * clw + 1, ch - values[index], clw, values[index]);
+      ctx.fillStyle = 'Green';
+      ctx.fillRect(highest * clw + 1, ch - values[highest], clw, values[highest]);
+      ctx.strokeRect(highest * clw + 1, ch - values[highest], clw, values[highest]);
+
+      console.log(highest);
     }
-  } else if (type === 'Selection') {
-    // Sort and Draw
-    ctx.strokeStyle = 'Black';
-    if (sorting && index < focus - 1) {
-      if (values[index] > values[highest]) {
-        highest = index;
 
-      }
-
-      index++;
-    } else if (sorting) {
-      var temp = values[highest];
-      values[highest] = values[focus - 1];
-      values[focus - 1] = temp;
-
-      index = 0;
-      focus--;
-      if (focus <= 0) {
-        sorting = false;
-      }
-    }
-
-    ctx.fillStyle = 'Red';
-    ctx.fillRect(index * clw + 1, ch - values[index], clw, values[index]);
-    ctx.strokeRect(index * clw + 1, ch - values[index], clw, values[index]);
-    ctx.fillStyle = 'Green';
-    ctx.fillRect(highest * clw + 1, ch - values[highest], clw, values[highest]);
-    ctx.strokeRect(highest * clw + 1, ch - values[highest], clw, values[highest]);
-
-    console.log(highest);
   }
-
-  //}
 }
