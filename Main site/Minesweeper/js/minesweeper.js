@@ -366,7 +366,7 @@ function newGridObj(x, y, id, surrounding) {
     findSurrounding: function (array, index1, index2) {
       bReturn = 0;
       for (var i = -1; i < 2; i++) {
-        for (var j = -1; j < 2; j++) { //TODO: Fix negative indexing
+        for (var j = -1; j < 2; j++) {
           if (index1 - i >= 0 && index2 - j >= 0) {
             if (index1 - i < array.length && index2 - j < array[index1 - i].length) {
               if (array[index1 - i][index2 - j].id === 'bomb') {
