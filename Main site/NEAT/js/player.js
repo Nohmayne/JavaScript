@@ -26,7 +26,8 @@ class Player {
 
 	show() {
 		fill('#FFF');
-		noStroke();
+		stroke(0);
+		strokeWeight(2);
 		ellipseMode(CORNER);
 		ellipse(this.x, this.y, this.w);
 	}
@@ -35,16 +36,14 @@ class Player {
 		this.x = this.lanes[this.num].x;
 
 		for (var i = 0; i < this.lanes.length; i++) {
-			if (this.lanes[i].num == this.num) {
-				var curLane = this.lanes[i];
-				console.log(curLane);
-				for (var j = 0; j < curLane.obs.length; j++) {
-					if (
-						curLane.obs[j].y + curLane.obs[j].w / 2 > this.y + this.w / 2 &&
-						curLane.obs[j].y - curLane.obs[j].w / 2 < this.y - this.w / 2
-					) {
+			var curlane = this.lanes[i];
+
+			for (var j = 0; j < curlane.obs.length; j++) {
+				var curob = curlane.obs[j];
+
+				if (curob.lane.num == this.num) {
+					if (curob.y - curob.w / 2 < this.y + this.w / 2 && curob.y + curob.w / 2 > this.y - this.w / 2) {
 						this.alive = false;
-						console.log('dead');
 					}
 				}
 			}

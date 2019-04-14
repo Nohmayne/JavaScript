@@ -19,7 +19,7 @@ function setup() {
 	p = new Player(h, scl, lanes);
 
 	createCanvas(w, h);
-	background(255);
+	background(128);
 }
 
 function draw() {
@@ -28,8 +28,8 @@ function draw() {
 			lanes[i].show();
 		}
 
-		p.show();
 		p.update();
+		p.show();
 
 		now = Date.now();
 		if ((now - obTimer) / 1000 > delay) {
@@ -37,7 +37,7 @@ function draw() {
 			obTimer = Date.now();
 		}
 	} else {
-		textSize(scl);
+		textSize(scl * 2);
 		textAlign(CENTER, CENTER);
 		text('GAME OVER', w / 2, h / 2);
 	}
