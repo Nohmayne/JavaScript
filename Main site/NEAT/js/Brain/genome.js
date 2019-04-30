@@ -1,39 +1,41 @@
 class Genome {
-	constructor(ins, outs, lHid, nHid, mutationRate) {
-		this.ins = [];
-		this.outs = [];
-		this.hid = [];
-		this.rate = mutationRate;
+	constructor(ins, outs, mutationRate) {
+		this.ins = ins;
+		this.outs = outs;
 
-		for (var i = 0; i < ins; i++) {
-			this.ins.push(new Node(INPUT));
+		this.hids = (this.ins + this.outs) / 2;
+		this.hids *= 1.5;
+		this.hids = Math.ceil(this.hids);
+
+		this.mutationRate = mutationRate;
+
+		this.inLayer = Array(this.ins);
+		this.hidLayer = Array(this.hids);
+		this.outLayer = Array(this.outs);
+
+		this.ws1 = [];
+		this.ws2 = [];
+
+		for (var i = 0; i < this.inLayer.length; i++) {
+			this.inLayer[i] = new cNode('INPUT');
 		}
+		for (var j = 0; j < this.hidLayer.length; j++) {
+			this.hidLayer[j] = new cNode('HIDDEN');
 
-		for (var o = 0; o < outs; o++) {
-			this.outs.push(new Node(OUTPUT));
-		}
-
-		for (var l = 0; l < lHid; l++) {
-			this.hid.push([]);
-			for (var n = 0; n < nHid; n++) {
-				this.hid[p].push(new Node(HIDDEN));
+			for (var w = 0; w < this.inLayer.length; w++) {
+				this.ws1.push(new Synapse(w, j));
 			}
 		}
+		for (var k = 0; k < this.outLayer.length; k++) {
+			this.outLayer[k] = new cNode('OUTPUT');
 
-		// TODO: Add weights from / to each node in the array
-		for (var sin = 0; sin < this.ins.length; sin++) {
-			for (var shin = 0; shin < this.hid[0].length; shin++) {}
+			for (var w = 0; w < this.hidLayer.length; w++) {
+				this.ws2.push(new Synapse(w, k));
+			}
 		}
 	}
 
-	mutate() {
-		temp = random() * 100;
-		if (temp < this.rate) {
-			type = floor(random(0, 4));
-
-			switch (type) {
-				case 0:
-			}
-		}
+	activation(input) {
+		output = 1 / (1 + Math.exp(input));
 	}
 }
