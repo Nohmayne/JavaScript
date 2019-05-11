@@ -10,28 +10,16 @@ class Genome {
 		this.mutationRate = mutationRate;
 
 		this.inLayer = Array(this.ins);
-		this.hidLayer = Array(this.hids);
+		this.hidLayer = [];
 		this.outLayer = Array(this.outs);
 
-		this.ws1 = [];
-		this.ws2 = [];
+		this.ws = [];
 
 		for (var i = 0; i < this.inLayer.length; i++) {
 			this.inLayer[i] = new cNode('INPUT');
 		}
-		for (var j = 0; j < this.hidLayer.length; j++) {
-			this.hidLayer[j] = new cNode('HIDDEN');
-
-			for (var w = 0; w < this.inLayer.length; w++) {
-				this.ws1.push(new Synapse(w, j, random(-2, 2)));
-			}
-		}
 		for (var k = 0; k < this.outLayer.length; k++) {
 			this.outLayer[k] = new cNode('OUTPUT');
-
-			for (var w = 0; w < this.hidLayer.length; w++) {
-				this.ws2.push(new Synapse(w, k, random(-2, 2)));
-			}
 		}
 	}
 
@@ -58,14 +46,25 @@ class Genome {
 			console.error('Inputs and input layer not equal in length');
 		}
 
+		// Transfer thru synapses of type 0
+		for (var i = 0; i < this.ws.length; i++) {
+			if (this.ws[i].type == 0) {
+				this.outLayer[this.ws[i].indices[1]].addValue(
+					this.ws[i].pass(this.inLayer[this.ws[i].indices[0]].value)
+				);
+			}
+		}
+
 		// Reset the hidden layer
 		this.reset(this.hidLayer);
 
-		// Transfer inputs with weights to hidden layer and activate
-		for (var i = 0; i < this.ws1.length; i++) {
-			this.hidLayer[this.ws1[i].indices[1]].addValue(
-				this.ws1[i].pass(this.inLayer[this.ws1[i].indices[0]].value)
-			);
+		// Transfer thru synapses of type 1
+		for (var i = 0; i < this.ws.length; i++) {
+			if (this.ws[i].type == 0) {
+				this.hidLayer[this.ws[i].indices[1]].addValue(
+					this.ws[i].pass(this.inLayer[this.ws[i].indices[0]].value)
+				);
+			}
 		}
 
 		// Activate hidden layer
@@ -77,15 +76,38 @@ class Genome {
 		this.reset(this.outLayer);
 
 		// Transfer hidden layer with weights to out layer and activate
-		for (var j = 0; j < this.ws2.length; j++) {
-			this.outLayer[this.ws2[j].indices[1]].addValue(
-				this.ws2[j].pass(this.hidLayer[this.ws2[j].indices[0]].value)
-			);
+		for (var j = 0; j < this.ws.length; j++) {
+			if (!this.ws[j].hid) {
+				this.outLayer[this.ws[j].indices[1]].addValue(
+					this.ws[j].pass(this.hidLayer[this.ws[j].indices[0]].value)
+				);
+			}
 		}
 
 		// Activate out layer
 		for (var o = 0; o < this.outLayer.length; o++) {
 			this.outLayer[o].value = this.activation(this.outLayer[o].value);
+		}
+	}
+
+	mutate() {
+		var type = floor(random(0, 4));
+
+		switch (type) {
+			case 0:
+				this.ws[floor(random(0, this.ws1.length))].weight = floor(random(-2, 2));
+				break;
+			case 1:
+				console.log('LINK');
+				break;
+			case 2:
+				console.log('NODE');
+				break;
+			case 3:
+				console.log('ED');
+				break;
+			default:
+				break;
 		}
 	}
 }

@@ -5,11 +5,9 @@ class Controller {
 
 	init(ins, outs) {
 		this.population.formPopulation(ins, outs);
-		console.log(this.population);
 	}
 
 	netForward(inputs) {
 		this.population.allForward(inputs);
-		console.log(this.population);
 	}
 }
