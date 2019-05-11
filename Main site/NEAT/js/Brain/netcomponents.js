@@ -22,7 +22,7 @@ class cNode {
 		this.value = 0;
 	}
 
-	setValue(value) {
-		this.value = value;
+	addValue(value) {
+		this.value += value;
 	}
 }

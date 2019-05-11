@@ -8,6 +8,7 @@ var controller;
 function preload() {
 	controller = new Controller(1, 0.3);
 	controller.init(2, 1);
+	controller.netForward([ 3, 4 ]);
 }
 
 function setup() {

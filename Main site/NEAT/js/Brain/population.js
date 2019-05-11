@@ -11,4 +11,10 @@ class Population {
 			this.individuals[i].formGenome(inputs, outputs);
 		}
 	}
+
+	allForward(inputs) {
+		for (var i = 0; i < this.individuals.length; i++) {
+			this.individuals[i].genome.forward(inputs);
+		}
+	}
 }
