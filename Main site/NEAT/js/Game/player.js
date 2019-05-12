@@ -10,6 +10,7 @@ class Player {
 		this.w = this.lanes[0].w;
 
 		this.alive = true;
+		this.fitness = 0;
 	}
 
 	moveLeft() {
@@ -25,7 +26,7 @@ class Player {
 	}
 
 	show() {
-		fill('#FFF');
+		fill(255);
 		stroke(0);
 		strokeWeight(2);
 		ellipseMode(CORNER);

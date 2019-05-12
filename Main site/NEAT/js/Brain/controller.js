@@ -1,6 +1,7 @@
 class Controller {
 	constructor(num, mut) {
-		this.population = new Population(num, mut);
+		this.num = num;
+		this.population = new Population(this.num, mut);
 	}
 
 	init(ins, outs) {

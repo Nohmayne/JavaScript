@@ -1,5 +1,6 @@
 class Synapse {
 	constructor(inDex, outDex, type, weight) {
+		this.enabled = true;
 		this.type = type;
 		this.indices = [ inDex, outDex ];
 		this.weight = weight;
