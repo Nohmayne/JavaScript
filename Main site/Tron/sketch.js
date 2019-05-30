@@ -60,32 +60,32 @@ function keyPressed() {
 	} else if (state == 1) {
 		switch (keyCode) {
 			case UP_ARROW:
-				p1.dir = 0;
+				if (p1.dir != 2) p1.dir = 0;
 				break;
 			case RIGHT_ARROW:
-				p1.dir = 1;
+				if (p1.dir != 3) p1.dir = 1;
 				break;
 			case DOWN_ARROW:
-				p1.dir = 2;
+				if (p1.dir != 0) p1.dir = 2;
 				break;
 			case LEFT_ARROW:
-				p1.dir = 3;
+				if (p1.dir != 1) p1.dir = 3;
 				break;
 			default:
 				break;
 		}
 		switch (key) {
 			case 'w':
-				p2.dir = 0;
+				if (p2.dir != 2) p2.dir = 0;
 				break;
 			case 'd':
-				p2.dir = 1;
+				if (p2.dir != 3) p2.dir = 1;
 				break;
 			case 's':
-				p2.dir = 2;
+				if (p2.dir != 0) p2.dir = 2;
 				break;
 			case 'a':
-				p2.dir = 3;
+				if (p2.dir != 1) p2.dir = 3;
 				break;
 			default:
 				break;
