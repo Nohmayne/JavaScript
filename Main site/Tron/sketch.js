@@ -3,8 +3,8 @@ let w, h;
 let state;
 
 function setup() {
-	w = 800;
-	h = 600;
+	w = windowWidth - 50;
+	h = windowHeight - 50;
 
 	state = 0;
 
@@ -29,13 +29,27 @@ function draw() {
 		p2.update(p1);
 		p2.show();
 
-		if (p1.alive && !p2.alive && !over) {
-			alert('Green wins!');
-			over = true;
-		} else if (p2.alive && !p1.alive && !over) {
-			alert('Blue wins!');
-			over = true;
+		if (p1.alive && !p2.alive && state == 1) {
+			state = 2;
+		} else if (p2.alive && !p1.alive && state == 1) {
+			state = 3;
 		}
+	} else if (state == 2) {
+		textAlign(CENTER, CENTER);
+		fill(255);
+		textSize(143);
+		stroke('#3B3');
+		text('Green wins!', w / 2, h / 2);
+		textSize(54);
+		text('reload to play again', w / 2, h / 2 + 143);
+	} else if (state == 3) {
+		textAlign(CENTER, CENTER);
+		fill(255);
+		textSize(143);
+		stroke('#33B');
+		text('Blue wins!', w / 2, h / 2);
+		textSize(54);
+		text('reload to play again', w / 2, h / 2 + 143);
 	}
 }
 
