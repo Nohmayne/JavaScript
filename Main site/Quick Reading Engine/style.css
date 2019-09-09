@@ -1,0 +1,25 @@
+#back {
+	position: fixed;
+	text-align: center;
+	left: 50%;
+	bottom: 5px;
+	background-color: White;
+	outline-color: Black;
+	outline-width: thick;
+	font-size: 24px;
+}
+table {
+	padding: 8px;
+	width: 99%;
+}
+tr {
+	width: 100%;
+}
+td {
+	position: fixed;
+	width: 100%;
+}
+textarea {
+	position: fixed;
+	width: 100%;
+}
